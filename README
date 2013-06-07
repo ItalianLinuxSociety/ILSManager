@@ -1,0 +1,13 @@
+ILSManager - Gestionale dell'associazione ILS
+=============================================
+
+ILSManager e' il gestionale web adottato internamente ad Italian Linux Society
+per organizzare soci, bilancio ed informazioni di varia natura.
+Al momento e' molto legato alle dinamiche interne dell'associazione ed include
+funzionalita' non utili ad altri (e.g. l'integrazione coi servizi mail offerti
+ai soci), ma offre comunque un punto di partenza per ulteriori miglioramenti
+che possano renderlo utilizzabile da qualsiasi altra associazione con analoghe
+necessita'.
+
+http://www.ils.org/
+

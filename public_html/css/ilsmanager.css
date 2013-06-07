@@ -1,0 +1,32 @@
+textarea, pre {
+  font-family: monospace;
+  font-size: 12pt;
+}
+
+.hidden {
+  display: none;
+}
+
+.formtable td {
+  vertical-align: top;
+  min-width: 160px;
+}
+
+.formhelp {
+  font-size: 0.6em;
+  display: block;
+  font-style: italic;
+}
+
+.form-horizontal .plain {
+  padding-top: 5px;
+}
+
+tr.success {
+  background-color: #DFF0D8;
+}
+
+tr.info {
+  background-color: #D9EDF7;
+}
+
