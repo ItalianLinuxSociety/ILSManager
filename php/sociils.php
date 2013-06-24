@@ -32,15 +32,13 @@ function sociils_sociodrawform($d,$subm,$errmsg)
   html_tableformtext($d,"Email","email",50);
   html_tableformtext($d,"Codice fiscale","codfis",50);
   html_tableformtext($d,"Data domanda ammissione","data_domanda",12);
-  if (array_key_exists ('ip_remoto_tmp', $d) && $d["ip_remoto_tmp"]!="")
-    html_tableformtext($d,"Indirizzo ip","ip_remoto_tmp",20);
-  if ($d["data_approvazione"]!="" && $d["data_approvazione"]!="0000-00-00")
+  if (array_key_exists ('data_approvazione', $d) && $d["data_approvazione"]!="" && $d["data_approvazione"]!="0000-00-00")
     html_tableformtext($d,"Approvazione (pagam. quota)","data_approvazione",12);
-  if ($d["data_ammissione"]!="" && $d["data_ammissione"]!="0000-00-00")
+  if (array_key_exists ('data_ammissione', $d) && $d["data_ammissione"]!="" && $d["data_ammissione"]!="0000-00-00")
     html_tableformtext($d,"Ammissione","data_ammissione",12);
-  if ($d["anno_iscrizione"]!="")
+  if (array_key_exists ('anno_iscrizione', $d) && $d["anno_iscrizione"]!="")
     html_tableformtext($d,"Anno iscrizione","anno_iscrizione",5);
-  if ($d["data_espulsione"]!="" && $d["data_espulsione"]!="0000-00-00")
+  if (array_key_exists ('data_espulsione', $d) && $d["data_espulsione"]!="" && $d["data_espulsione"]!="0000-00-00")
     html_tableformtext($d,"Data Espulsione","data_espulsione",12);
   html_tableformtext($d,"Nickname","nickname",50);
   html_tableformtextarea($d,"Note","note");
@@ -71,8 +69,6 @@ function sociils_sociogetform()
     $s["data_ammissione"]=http_getparm("data_ammissione");
   if (isset($_REQUEST["data_espulsione"]))
     $s["data_ammissione"]=http_getparm("data_espulsione");
-  if (isset($_REQUEST["ip_remoto_tmp"]))
-    $s["ip_remoto"]=ip2long(http_getparm("ip_remoto_tmp"));
   if (isset($_REQUEST["anno_iscrizione"]))
     $s["anno_iscrizione"]==http_getparm("anno_iscrizione");
   return $s;
@@ -80,14 +76,10 @@ function sociils_sociogetform()
 
 function sociils_sociocheckform($s)
 {
-  if (($i=http_getparm("ip_remoto_tmp"))!="" && long2ip($s["ip_remoto"])!=$i)
-    return "Indirizzo ip non corretto";
   if ($s["nome"].$s["cognome"]=="")
     return "Nome e cognome non possono essere entrambi vuoti";
   if ($s["email"]!="" && !is_email($s["email"]))
     return "Indirizzo email non corretto";
-  if ($s["anno_iscrizione"]!="" && !is_numeric($s["anno_iscrizione"]))
-    return "L'anno di iscrizione deve essere numerico";
   return "";
 }
 
@@ -244,24 +236,19 @@ function sociils_sociodrawtable_editable($e = '')
 
 function sociils_nuovadomanda1()
 {
-  html_pagehead("Nuova domanda di ammissione", array ('Soci ILS' => 'sociils', 'Domande ammissione' => 'sociils&action=domande'));
+  html_pagehead(" nda di ammissione", array ('Soci ILS' => 'sociils', 'Domande ammissione' => 'sociils&action=domande'));
 
-  echo "<H2>Incollare la domanda di ammissione</H2>\n";
+  ?>
+
+  <h2>Incollare la domanda di ammissione</h2>
+
+  <?php
+
   html_openform(".",array("function"=>"sociils","action"=>"nuovadomanda"));
-  html_tableformtextarea(array(),"&nbsp;","domanda",80,20);
+  html_tableformtextarea(array(),"Incolla il testo della domanda ricevuto via mail","domanda",80,20);
   html_tableformsubmit("Invia");
   html_closeform();
   html_pagetail();
-}
-
-function sociils_checkparametro($par,$riga)
-{
-  return ereg("^.*\\[".$par."\\].=>",$riga);
-}
-
-function sociils_getparametro($par,$riga)
-{
-  return ereg_replace("^.*\\[".$par."\\].=> ","",$riga);
 }
 
 function sociils_formdomanda($d,$e)
@@ -275,39 +262,98 @@ function sociils_formdomanda($d,$e)
 
 function sociils_nuovadomanda2()
 {
-  foreach (explode("\n",$_REQUEST["domanda"]) as $nn=>$r)
+  $map = array (
+    'Nome' => 'nome',
+    'Cognome' => 'cognome',
+    'Comune di Nascita' => 'comune_nasc',
+    'Provincia di Nascita' => 'prov_nasc',
+    'Data di Nascita' => 'data_nasc',
+    'Indirizzo di Residenza' => 'indirizzo_resid',
+    'Comune di Residenza' => 'comune_resid',
+    'Provincia di Residenza' => 'prov_resid',
+    'CAP di Residenza' => 'cap_resid',
+    'Indirizzo Mail' => 'email',
+    'Codice Fiscale' => 'codfis',
+    'Nickname' => 'nickname'
+  );
+
+  $d = array ();
+
+  foreach (explode ("\n", $_REQUEST["domanda"]) as $r)
   {
-    if (sociils_checkparametro("nome",$r))                   $d["nome"]=mb_convert_case(sociils_getparametro("nome",$r),MB_CASE_TITLE);
-    if (sociils_checkparametro("cognome",$r))                $d["cognome"]=mb_convert_case(sociils_getparametro("cognome",$r),MB_CASE_TITLE);
-    if (sociils_checkparametro("comune_di_nascita",$r))      $d["comune_nasc"]=mb_convert_case(sociils_getparametro("comune_di_nascita",$r),MB_CASE_TITLE);
-    if (sociils_checkparametro("provincia_di_nascita",$r))   $d["prov_nasc"]=mb_convert_case(sociils_getparametro("provincia_di_nascita",$r),MB_CASE_UPPER);
-    if (sociils_checkparametro("data_di_nascita",$r))        $d["data_nasc"]=sociils_getparametro("data_di_nascita",$r);
-    if (sociils_checkparametro("indirizzo_di_residenza",$r)) $d["indirizzo_resid"]=sociils_getparametro("indirizzo_di_residenza",$r);
-    if (sociils_checkparametro("comune_di_residenza",$r))    $d["comune_resid"]=mb_convert_case(sociils_getparametro("comune_di_residenza",$r),MB_CASE_TITLE);
-    if (sociils_checkparametro("provincia_di_residenza",$r)) $d["prov_resid"]=mb_convert_case(sociils_getparametro("provincia_di_residenza",$r),MB_CASE_UPPER);
-    if (sociils_checkparametro("cap_di_residenza",$r))       $d["cap_resid"]=sociils_getparametro("cap_di_residenza",$r);
-    if (sociils_checkparametro("email",$r))                  $d["email"]=sociils_getparametro("email",$r);
-    if (sociils_checkparametro("codice_fiscale",$r))         $d["codfis"]=mb_convert_case(sociils_getparametro("codice_fiscale",$r),MB_CASE_UPPER);
-    if (ereg("^xxx.*yyy-yy-yy.*zzzz-zz-zz",$r) && $h=explode("\t",$r)) $d["data_domanda"]=$h[12];
-    if (ereg("^IP_REMOTO:",$r)) $d["ip_remoto"]=trim(ereg_replace("^IP_REMOTO: ","",$r));
+    if (strstr ($r, ':') == false)
+      continue;
+
+    list ($field, $value) = explode (':', $r, 2);
+
+    if (array_key_exists ($field, $map) == false)
+      continue;
+
+    $value = trim ($value, "\r ");
+    $index = $map [$field];
+    $value = mysql_real_escape_string ($value);
+
+    switch ($index) {
+      case 'email':
+      case 'data_nasc':
+      case 'indirizzo_resid':
+      case 'cap_resid':
+      case 'nickname':
+        $value = $value;
+        break;
+
+      case 'prov_nasc':
+      case 'prov_resid':
+        $query = "SELECT sigla_prov FROM it_province WHERE provincia = '$value'";
+        $res = mysql_query ($query);
+        if (mysql_num_rows ($res) == 1) {
+          $p = mysql_fetch_array ($res);
+          $value = $p [0];
+        }
+        break;
+
+      case 'codfis':
+        $value = mb_convert_case ($value, MB_CASE_UPPER);
+        break;
+
+      default:
+        $value = mb_convert_case ($value, MB_CASE_TITLE);
+        break;
+    }
+
+    $d[$index] = $value;
   }
-  $d["data_approvazione"]="0000-00-00";
-  $d["data_ammissione"]="0000-00-00";
-  $d["ip_remoto_tmp"]=long2ip(ip2long($d["ip_remoto"]));
-  sociils_formdomanda($d,"");
+
+  if (preg_match ('/\d{2}\/\d{2}\/\d{4}/', $_REQUEST["domanda"], $matches) == 1) {
+    list ($m, $da, $y) = explode ('/', $matches [0]);
+    $d["data_domanda"] = "$y-$m-$da";
+  }
+
+  $d['data_approvazione'] = "0000-00-00";
+  $d['data_ammissione'] = "0000-00-00";
+
+  sociils_formdomanda ($d, "");
 }
 
 function sociils_nuovadomanda3()
 {
   $s=sociils_sociogetform();
   $e=sociils_sociocheckform($s);
+
+  if ($e == '') {
+    $query = "SELECT * FROM users_picard WHERE nickname = '" . $s['nickname'] . "'";
+    $res = mysql_query ($query);
+    if (mysql_num_rows ($res) != 0)
+      $e = 'Nickname registrato';
+  }
+
   if ($e!="")
   {
-    $s["ip_remoto_tmp"]=$_REQUEST["ip_remoto_tmp"];
     sociils_formdomanda($s,$e);
   }
   else
   {
+    $s['anno_iscrizione'] = date ('Y', strtotime ("+2 months"));
     $id=my_insert("soci_domande",$s);
 
     $user_name = $s["nome"];
@@ -356,10 +402,10 @@ TEXT;
 
 function sociils_nuovadomanda()
 {
-  if ($_REQUEST["domanda"]=="")
+  if (array_key_exists ('domanda', $_REQUEST) == false || $_REQUEST["domanda"] == "")
     sociils_nuovadomanda1();
   else
-  if ($_REQUEST["confermadati"]!="ok")
+  if (array_key_exists ('confermadati', $_REQUEST) == false || $_REQUEST["confermadati"]!="ok")
     sociils_nuovadomanda2();
   else
     sociils_nuovadomanda3();
@@ -376,7 +422,6 @@ function sociils_candidatosocioform($id)
                                                  'Scheda' => "sociils&action=candidato&show=$id"));
 
   $d=mysql_fetch_array(mysql_query("select * from soci_domande where id=$id"));
-  $d["ip_remoto_tmp"]=long2ip($d["ip_remoto"]);
   html_openform(".",array("function"=>"sociils","action"=>"candidato","edit"=>"$id","confermadati"=>"ok"));
   sociils_sociodrawform($d,"Modifica","");
 }
@@ -391,7 +436,6 @@ function sociils_candidatosociogetform($id)
                                                  'Domande ammissione' => 'sociils&action=domande',
                                                  'Scheda' => "sociils&action=candidato&show=$id"));
 
-    $s["ip_remoto_tmp"]=$_REQUEST["ip_remoto_tmp"];
     html_openform(".",array("function"=>"sociils","action"=>"candidato","edit"=>$id,"confermadati"=>"ok"));
     sociils_sociodrawform($s,"Modifica",$e);
   }
@@ -409,7 +453,6 @@ function sociils_candidatosocioaskremove($id)
                                                  'Scheda' => "sociils&action=candidato&show=$id"));
 
   $d=mysql_fetch_array(mysql_query("select * from soci_domande where id=$id"));
-  $d["ip_remoto_tmp"]=long2ip($d["ip_remoto"]);
   html_openform(".",array("function"=>"sociils","action"=>"candidato","remove"=>"$id","confermadati"=>"ok"));
   html_tableformstatic("Nome",$d["cognome"]." ".$d["nome"]);
   html_tableformstatic("Nato","a ".$d["comune_nasc"]." (".$d["prov_nasc"].") il ".$d["data_nasc"]);

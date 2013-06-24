@@ -328,9 +328,7 @@ function html_tableformtextarea($my,$descr,$name,$cols=60,$rows=5)
   <div class="control-group">
     <label class="control-label" for="<?php echo $name ?>"><?php echo $descr ?></label>
     <div class="controls">
-      <textarea name="<?php echo $name ?>" class="input-block-level">
-        <?php if (array_key_exists ($name, $my)) echo htmlspecialchars ($my [$name]) ?>
-      </textarea>
+      <textarea name="<?php echo $name ?>" class="input-block-level"><?php if (array_key_exists ($name, $my)) echo htmlspecialchars ($my [$name]) ?></textarea>
     </div>
   </div>
 

@@ -29,7 +29,7 @@ function test_value_array ($array, $name, $value = null, $type = '')
       case 'array':
         return is_array ($array [$name]);
       case 'num':
-        return is_numeric ($array [$name]);
+        return $array [$name] != '' && is_numeric ($array [$name]);
     }
   }
   else {
