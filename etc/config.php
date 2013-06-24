@@ -17,18 +17,23 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-$DB=array(
-  "host"=>"DBHOST",
-  "login"=>"DBUSER",
-  "password"=>"DBPASSWORD",
-  "db"=>"DBNAME"
-  );
+$DB = array (
+  "host" => "DBHOST",
+  "login" => "DBUSER",
+  "password" => "DBPASSWORD",
+  "db" => "DBNAME"
+);
 
-$PROGRAMMA=array(
-  "nome"=>"ILS MANAGER",
+$API = array (
+  'key' => '1232456'
+);
+
+$PROGRAMMA = array (
+  "nome" => "ILS MANAGER",
   "css" => array ("css/ilsmanager.css", "css/bootstrap.css", "css/tablesorter.css"),
   "js" => array ("js/bootstrap.js", "js/ilsmanager.js", "js/jquery.tablesorter.min.js"),
-  "mail"=>"direttore@linux.it"
-  );
+  "mail" => "direttore@linux.it"
+);
 
 ?>
+
