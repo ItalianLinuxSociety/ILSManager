@@ -50,7 +50,7 @@ function async ()
                       <input type="hidden" name="form" value="approvasocio">
                       <input type="hidden" name="id_socio" value="' . $d ["id"] . '">
                       Anno iscriz.:&nbsp;<input type="text" name="anno" value="' . date("Y") . '" size="8">&nbsp;
-                      Quota:&nbsp;<input type="text" name="quota" value="' . annual_fee_amount () '.00" size="8">&nbsp;
+                      Quota:&nbsp;<input type="text" name="quota" value="' . annual_fee_amount () . '.00" size="8">&nbsp;
                       <input type="submit" value="Approva">
                     </form>';
         $ret [] = $o;

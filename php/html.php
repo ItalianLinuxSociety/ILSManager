@@ -80,6 +80,10 @@ function html_pagetail()
     <hr />
 
     <div class="row">
+      <div class="span4">
+        Il codice sorgente di ILSManager è <a href="https://github.com/ItalianLinuxSociety/ILSManager">disponibile qui</a>, insieme ad una nutrita lista di <a href="https://github.com/ItalianLinuxSociety/ILSManager/issues">cose da fare</a> per migliorarlo!
+      </div>
+
       <div class="span4 pull-right">
         Per segnalazioni, domande e consigli, manda una mail a <a href="mailto:<?php echo $PROGRAMMA ['mail'] ?>"><?php echo $PROGRAMMA ['mail'] ?></a>
       </div>
