@@ -62,4 +62,8 @@ function random_string ($length = 10)
   return $randomString;
 }
 
+function current_social_year () {
+  return date ('Y', strtotime ("+2 months"));
+}
+
 ?>

@@ -212,6 +212,8 @@ function sociils_sociodrawtable_editable($e = '')
         while ($d2 = mysql_fetch_assoc($r2))
           $re[$d2["id_movimento"]] = "<A HREF=\"?function=ricevutepdf&id=" . $d2["idr"] . "\">ric. " . $d2["numero"] . "</A>";
 
+      $last_year = 0;
+
       html_opentable ();
       html_tableintest (array ("Anno","Data versamento","Ricevute"));
 
@@ -220,11 +222,47 @@ function sociils_sociodrawtable_editable($e = '')
           $mov = $re[$d1["id_movimento"]];
         else
           $mov = '&nbsp;';
+
         html_tabledata (array ($d1["anno"], printable_date ($d1["data_versamento"]), $mov));
+
+        if ($d1["anno"] > $last_year)
+          $last_year = $d1["anno"];
       }
 
       html_closetable ();
       ?>
+
+      <?php if ($last_year < current_social_year ()): ?>
+
+      <div class="well">
+        <p>
+          Per rinnovare la tua quota puoi provvedere al versamento di 25 euro per mezzo di:
+        </p>
+
+        <hr />
+
+        <p>
+          Bonifico bancario:
+          <pre>Banca: Unicredit Banca
+IT 74 G 02008 12609 000100129899 
+ILS ITALIAN LINUX SOCIETY</pre>
+        </p>
+
+        <hr />
+
+        <p>
+            PayPal:
+            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+              <input type="hidden" name="cmd" value="_s-xclick">
+              <input type="hidden" name="hosted_button_id" value="V4RCCPUGTJNWQ">
+              <input style="width: auto" type="image" src="https://www.paypalobjects.com/it_IT/IT/i/btn/btn_subscribe_LG.gif" border="0" name="submit" alt="PayPal - Il metodo rapido, affidabile e innovativo per pagare e farsi pagare.">
+              <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+            </form>
+            (questa opzione abilita la sottoscrizione automatica annuale)
+        </p>
+      </div>
+
+      <?php endif; ?>
     </div>
   </div>
 
@@ -353,7 +391,7 @@ function sociils_nuovadomanda3()
   }
   else
   {
-    $s['anno_iscrizione'] = date ('Y', strtotime ("+2 months"));
+    $s['anno_iscrizione'] = current_social_year ();
     $id=my_insert("soci_domande",$s);
 
     $user_name = $s["nome"];
