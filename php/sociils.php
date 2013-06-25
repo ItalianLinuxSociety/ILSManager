@@ -391,8 +391,7 @@ function sociils_nuovadomanda3()
   }
   else
   {
-    $s['anno_iscrizione'] = current_social_year ();
-    $id=my_insert("soci_domande",$s);
+    $id = my_insert("soci_domande",$s);
 
     $user_name = $s["nome"];
     $user_surname = $s["cognome"];
