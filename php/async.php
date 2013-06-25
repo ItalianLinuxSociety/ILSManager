@@ -50,7 +50,7 @@ function async ()
                       <input type="hidden" name="form" value="approvasocio">
                       <input type="hidden" name="id_socio" value="' . $d ["id"] . '">
                       Anno iscriz.:&nbsp;<input type="text" name="anno" value="' . date("Y") . '" size="8">&nbsp;
-                      Quota:&nbsp;<input type="text" name="quota" value="25.00" size="8">&nbsp;
+                      Quota:&nbsp;<input type="text" name="quota" value="' . annual_fee_amount () '.00" size="8">&nbsp;
                       <input type="submit" value="Approva">
                     </form>';
         $ret [] = $o;
@@ -102,6 +102,7 @@ function async ()
           $count++;
           $user_name = $s["nome"];
           $user_surname = $s["cognome"];
+          $fee = annual_fee_amount ();
 
           $text =<<<TEXT
 Gentile $user_surname $user_name,
@@ -109,7 +110,7 @@ ti ricordiamo che da ora è possibile procedere con il rinnovo della tua
 iscrizione ad Italian Linux Society per l'anno ${year}.
 
 
-Per completare la procedura e' possibile versare la tua quota, pari a 25 euro
+Per completare la procedura e' possibile versare la tua quota, pari a $fee euro
 
 - via bonifico sul conto corrente Unicredit
 IT 74 G 02008 12609 000100129899

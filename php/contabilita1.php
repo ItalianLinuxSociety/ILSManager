@@ -82,7 +82,7 @@ function contabilita1_handleparam()
     $b["sottoconto"]=$s["sottoconto"];
     $b["id_sottoconto"]=$s["id"];
     $b["valuta"]=$d["data_versamento"];
-    $b["avere"]=25;
+    $b["avere"] = annual_fee_amount ();
     $b["dare"]=0;
     $_SESSION["contab1"]["quote"][$q]="sel";
     $_SESSION["contab1"]["righe"][]=$b;

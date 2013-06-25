@@ -236,7 +236,7 @@ function sociils_sociodrawtable_editable($e = '')
 
       <div class="well">
         <p>
-          Per rinnovare la tua quota puoi provvedere al versamento di 25 euro per mezzo di:
+          Per rinnovare la tua quota puoi provvedere al versamento di <?php echo annual_fee_amount () ?> euro per mezzo di:
         </p>
 
         <hr />
@@ -396,6 +396,7 @@ function sociils_nuovadomanda3()
 
     $user_name = $s["nome"];
     $user_surname = $s["cognome"];
+    $fee = annual_fee_amount ();
 
     $text =<<<TEXT
 Gentile $user_surname $user_name,
@@ -403,7 +404,7 @@ la tua domanda di iscrizione e' stata registrata sul server di Italian Linux
 Society.
 
 Per completare la procedura e' possibile ora versare via bonifico bancario la
-quota di iscrizione, pari a 25 euro
+quota di iscrizione, pari a $fee euro
 
 - sul conto corrente Unicredit
 IT 74 G 02008 12609 000100129899
@@ -517,7 +518,7 @@ function sociils_candidatosocioaskapprova($id,$f,$err)
   {
     $f["data_approvazione"]=date("Y-m-d");
     $f["anno_iscrizione"]=date("Y");
-    $f["importo_quota"]=25.00;
+    $f["importo_quota"] = annual_fee_amount ();
   }
   html_openform(".",array("function"=>"sociils","action"=>"candidato","approva"=>"$id","confermadati"=>"ok"));
   html_tableformerrormsg($err);

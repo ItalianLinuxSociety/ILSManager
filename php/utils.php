@@ -66,4 +66,8 @@ function current_social_year () {
   return date ('Y', strtotime ("+2 months"));
 }
 
+function annual_fee_amount () {
+  return 25;
+}
+
 ?>
