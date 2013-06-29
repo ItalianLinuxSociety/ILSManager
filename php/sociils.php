@@ -556,7 +556,11 @@ function sociils_candidatosocioapprovasql($id,$dataappr,$anno,$quota)
   $nc["password"] = mdspwgen(random_string ());
   $nc["pw_picard"] = $d["password"];
   $nc["cambiopw"] = date ("Y-m-d");
+  $nc = sociils_picardnormalizedata ($nc);
   sociils_picardcreateaccount ($new_id, $nc);
+
+  $final_name = $nc ['nome'];
+  $final_surname = $nc ['cognome'];
 
   $text =<<<TEXT
 Gentile $user_surname $user_name,
@@ -569,9 +573,9 @@ saranno abilitati i tuoi indirizzi mail @linux.it e sei stato iscritto alla
 nostra mailing list privata.
 
 Entrambi gli indirizzi
-${user_name}.${user_surname}@linux.it e
+${final_name}.${final_surname}@linux.it e
 ${nickname}@linux.it
-verranno settati come alias all'indirizzo
+verranno settati entro poche ore come alias all'indirizzo
 ${email}
 E' possibile modificare tale impostazione per mezzo di ILSManager, il nostro
 gestionale interno, raggiungibile all'indirizzo https://ilsmanager.linux.it/
@@ -1208,23 +1212,23 @@ function sociils_picardchpw($n)
 
 function sociils_picardshowexist($d)
 {
-  html_pagehead("Elenco Utenti Picard", array ('Soci ILS' => 'sociils', 'Utenti Picard' => 'sociils&action=picard'));
+  html_pagehead("Utente Picard", array ('Soci ILS' => 'sociils', 'Utenti Picard' => 'sociils&action=picard'));
 
   $s=mysql_fetch_array(mysql_query("select * from soci_iscritti where nickname=\"".$d["nickname"]."\""));
 
-  html_opentable();
-  html_tablefieldrow("Nickname",$d["nickname"]);
-  html_tablefieldrow("Nome",$d["nome"]);
-  html_tablefieldrow("Cognome",$d["cognome"]);
-  html_tablefieldrow("Password (enc.)",$d["password"]);
-  html_tablefieldrow("Attivo",$d["attivo"]);
-  html_tablefieldrow("Cambio pw",$d["cambiopw"]);
-  html_tablefieldrow("Sospeso",$d["sospeso"]);
-  html_tablefieldrow("Inoltro email",$d["fw_email"]);
-  html_tablefieldrow("Homepage",$d["homepage"]);
-  html_tablefieldrow("Feed blog",$d["blog_feed"]);
-  html_tablefieldrow("Note",$d["note"]);
-  html_closetable();
+  html_openform ('');
+  html_tableformstatic("Nickname",$d["nickname"]);
+  html_tableformstatic("Nome",$d["nome"]);
+  html_tableformstatic("Cognome",$d["cognome"]);
+  html_tableformstatic("Password (Hash)",$d["password"]);
+  html_tableformstatic("Attivo",$d["attivo"]);
+  html_tableformstatic("Cambio Password",$d["cambiopw"]);
+  html_tableformstatic("Sospeso",$d["sospeso"]);
+  html_tableformstatic("Inoltro email",$d["fw_email"]);
+  html_tableformstatic("Homepage",$d["homepage"]);
+  html_tableformstatic("Feed Blog",$d["blog_feed"]);
+  html_tableformstatic("Note",$d["note"]);
+  html_closeform ();
 
   ?>
 
@@ -1293,11 +1297,25 @@ function sociils_picardnewaccountform($s,$d,$e,$sub)
   html_pagetail();
 }
 
+function sociils_picardnormalizedata ($d)
+{
+  $d["cognome"] = ereg_replace (" ", "", $d["cognome"]);
+  $d["cognome"] = ereg_replace ("'", "", $d["cognome"]);
+  $d["nome"] = ereg_replace (" ", "", $d["nome"]);
+
+  if (picard_aliasexist2 ($d["cognome"])) {
+    $d["cognome"] = "XXX";
+    $d["nome"] = ereg_replace (" ", "", $s["nome"] . "." . $s["cognome"]);
+  }
+
+  return $d;
+}
+
 function sociils_picardcreateaccount ($id, $d)
 {
-  my_insert("users_picard",$d);
-  $n["nickname"]=$d["nickname"];
-  my_update("soci_iscritti",$n,"id",$id);
+  my_insert ("users_picard", $d);
+  $n["nickname"] = $d["nickname"];
+  my_update ("soci_iscritti", $n, "id", $id);
 }
 
 function sociils_picardnewaccount($id)
@@ -1305,16 +1323,7 @@ function sociils_picardnewaccount($id)
   $s=mysql_fetch_assoc(mysql_query("select * from soci_iscritti where id=$id"));
   if (http_getparm("confermadati")!="ok")
   {
-    if (picard_aliasexist2($s["cognome"]))
-    {
-      $d["cognome"]="XXX";
-      $d["nome"]=ereg_replace(" ","",$s["nome"].".".$s["cognome"]);
-    }
-    else
-    {
-      $d["cognome"]=ereg_replace(" ","",$s["cognome"]);
-      $d["nome"]=ereg_replace(" ","",$s["nome"]);
-    }
+    $d = sociils_picardnormalizedata ($s);
     $d["nickname"]=$s["nickname"];
     $d["attivo"]="S";
     sociils_picardnewaccountform($s,$d,"","Invia");
