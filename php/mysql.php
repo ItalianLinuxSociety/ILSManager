@@ -56,7 +56,6 @@ function my_update($table,$record,$key,$keyval)
   mysql_query("update $table set $q where $key=$keyval");
 }
 
-
 function my_checklogintable($login,$password,$table,$loginfield,$passwordfield,$where)
 {
   $q="select * from $table where $loginfield=\"$login\"";

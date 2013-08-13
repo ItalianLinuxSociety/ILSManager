@@ -41,6 +41,8 @@ function sociils_sociodrawform($d,$subm,$errmsg)
   if (array_key_exists ('data_espulsione', $d) && $d["data_espulsione"]!="" && $d["data_espulsione"]!="0000-00-00")
     html_tableformtext($d,"Data Espulsione","data_espulsione",12);
   html_tableformtext($d,"Nickname","nickname",50);
+  html_tableformselect($d,"Tipo","type", array (array ('privato', 'privato'), array ('associazione', 'associazione'), array ('sostenitore', 'sostenitore')));
+  html_tableformtext ($d, "Soci", "members");
   html_tableformtextarea($d,"Note","note");
   html_tableformsubmit($subm);
   html_closeform();
@@ -61,16 +63,28 @@ function sociils_sociogetform()
   $s["email"]=http_getparm("email");
   $s["codfis"]=http_getparm("codfis");
   $s["data_domanda"]=http_getparm("data_domanda");
+
   if (isset($_REQUEST["data_approvazione"]))
     $s["data_approvazione"]=http_getparm("data_approvazione");
+
   $s["note"]=http_getparm("note");
   $s["nickname"]=http_getparm("nickname");
+  $s["type"]=http_getparm("type");
+
+  if ($s["type"] == 'associazione')
+    $s["members"] = http_getparm ("members");
+  else
+    $s["members"] = 0;
+
   if (isset($_REQUEST["data_ammissione"]))
     $s["data_ammissione"]=http_getparm("data_ammissione");
+
   if (isset($_REQUEST["data_espulsione"]))
     $s["data_ammissione"]=http_getparm("data_espulsione");
+
   if (isset($_REQUEST["anno_iscrizione"]))
     $s["anno_iscrizione"]==http_getparm("anno_iscrizione");
+
   return $s;
 }
 
@@ -123,8 +137,11 @@ function sociils_sociodrawtable($d)
   else
     html_tableformstatic ("Nickname",$d["nickname"]);
 
+  html_tableformstatic ("Tipo", $d["type"]);
+
   if ($p && $u=mysql_fetch_array(mysql_query("select * from users_picard where nickname=\"".$d["nickname"]."\"")))
     html_tableformstatic("Inoltro @linux.it",$u["fw_email"]);
+
   if (userperm("anagrafica"))
   {
     if (array_key_exists ('ip_remoto', $d) && $d["ip_remoto"]!=0)
@@ -1035,6 +1052,7 @@ function sociils_elencosoci()
     if ($r=mysql_query("select * from soci_iscritti as s left join tmp_ultimaquota as u on u.id_socio=s.id $q order by cognome,nome,nickname"))
     {
       html_opentable(true);
+
       if (userperm("anagrafica"))
         html_tableintest(array("Nome","Citt&agrave;","Nickname","Data ammissione","Data espulsione","Quota"));
       else
@@ -1718,12 +1736,16 @@ function sociils_menu()
   $iscr=mysql_num_rows(mysql_query("select * from soci_iscritti where data_espulsione=00000000"));
   $dom=mysql_num_rows(mysql_query("select * from soci_iscritti where data_ammissione=00000000"));
 
+  $res = mysql_query ("SELECT SUM(members) FROM soci_iscritti WHERE data_espulsione = 00000000 AND type = 'associazione'");
+  $row = mysql_fetch_array ($res);
+  $extra = $row [0];
+
   ?>
 
   <div class="row">
     <div class="span6">
       <ul class="nav nav-pills nav-stacked">
-        <li><a href="?function=sociils&action=elenco">Elenco soci (<?php echo $iscr ?>)</a>
+        <li><a href="?function=sociils&action=elenco">Elenco soci (<?php echo $iscr ?> + <?php echo $extra ?>)</a>
         <li><a href="?function=sociils&regione=tutte">Dislocazione regionale</a>
         <?php if (userperm("anagrafica")): ?>
           <li><a href="?function=sociils&action=domande">Domande di ammissione (<?php echo $dom ?>)</a>

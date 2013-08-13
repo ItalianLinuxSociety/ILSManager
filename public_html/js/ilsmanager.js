@@ -45,5 +45,18 @@ $(document).ready (function () {
   $('.modal-footer .save-button').click (function () {
     $(this).parent ().parent ().find ('.modal-body form').submit ();
   });
+
+  if ($('select[name=type]').length != 0) {
+    $('select[name=type]').change (function () {
+      if ($(this).find ('option:selected').val () == 'associazione') {
+        $('#members').parents ('.control-group').show ();
+      }
+      else {
+        $('#members').val ('0').parents ('.control-group').hide ();
+      }
+    });
+
+    $('select[name=type]').change ();
+  }
 });
 

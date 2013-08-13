@@ -339,6 +339,18 @@ function html_tableformtextarea($my,$descr,$name,$cols=60,$rows=5)
   <?php
 }
 
+/*
+  Follia ereditata dalla gestione delle select, da correggere
+  dappertutto gestendola con array indicizzati
+*/
+function test_into_select ($my, $name, $d)
+{
+  if (array_key_exists ($name, $my))
+    return ($d [1] == $my [$name]);
+  else
+    return (array_key_exists (2, $d) && $d[2] == "S");
+}
+
 function html_tableformselect($my,$descr,$name,$sel)
 {
 
@@ -349,7 +361,7 @@ function html_tableformselect($my,$descr,$name,$sel)
     <div class="controls">
       <select name="<?php echo $name ?>">
         <?php foreach ($sel as $d): ?>
-        <option value="<?php echo $d[0] ?>"<?php if (array_key_exists (2, $d) && $d[2] == "S") echo ' selected="selected"'; ?>><?php echo $d[1] ?></option>
+        <option value="<?php echo $d[0] ?>"<?php if (test_into_select ($my, $name, $d)) echo ' selected="selected"'; ?>><?php echo $d[1] ?></option>
         <?php endforeach; ?>
       </select>
     </div>
