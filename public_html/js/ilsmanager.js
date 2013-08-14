@@ -29,6 +29,15 @@ $(document).ready (function () {
     }
   });
 
+  $('input#ownername').autocomplete ({
+    source: '?function=async&action=nomi',
+    minLenght: 2,
+    select: function (event, ui) {
+      $('input#ownername').val (ui.item.label);
+      $('input[name=owner]').val (ui.item.id);
+    }
+  });
+
   $('#listaccounts').hide ();
 
   $('input#conto').autocomplete ({

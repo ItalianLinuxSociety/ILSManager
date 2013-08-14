@@ -84,6 +84,22 @@ function async ()
       echo json_encode ($ret);
       break;
 
+    case 'nomi':
+      $ret = array ();
+      $name = $_GET ['term'];
+
+      $r = mysql_query ("SELECT * FROM soci_iscritti WHERE (cognome LIKE '%${name}%' OR nome LIKE '%${name}%' OR nickname LIKE '%${name}%') AND data_espulsione=00000000");
+
+      while ($d=mysql_fetch_array($r)) {
+        $o = new stdClass ();
+        $o->id = $d ['id'];
+        $o->label = $o->value = $d ['cognome'] . ' ' . $d ['nome'] . ' (' . $d ['nickname'] . ')';
+        $ret [] = $o;
+      }
+
+      echo json_encode ($ret);
+      break;
+
     case 'notifiche':
       $today = date ('m-d');
 

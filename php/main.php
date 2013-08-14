@@ -28,6 +28,7 @@ include $UNIXDIR["php"]."banche.php";
 include $UNIXDIR["php"]."contabilita.php";
 include $UNIXDIR["php"]."assemblee.php";
 include $UNIXDIR["php"]."sociils.php";
+include $UNIXDIR["php"]."domini.php";
 include $UNIXDIR["php"]."users.php";
 include $UNIXDIR["php"]."async.php";
 
@@ -74,6 +75,7 @@ function menuilsmanager()
         <?php if (is_numeric($_SESSION["user"]["idsocio"])): ?>
           <li><a href="?function=sociils&action=iscritti&myedit=<?php echo $_SESSION["user"]["login"] ?>">Dati Personali</a></li>
           <li><a href="?function=sociils">Soci ILS</a></li>
+          <li><a href="?function=domini">Anagrafe Domini</a></li>
           <li><a href="?function=assemblee">Assemblee Soci</a></li>
         <?php endif; ?>
         <?php if (userperm("banche")): ?>
@@ -114,6 +116,8 @@ function ilsmanager()
     menuilsmanager();
   else if ($_REQUEST["function"]=="sociils")
     sociils();
+  else if ($_REQUEST["function"]=="domini")
+    domini();
   else if ($_REQUEST["function"]=="assemblee" && is_numeric($_SESSION["user"]["idsocio"]))
     assemblee();
   else if ($_REQUEST["function"]=="banche")
