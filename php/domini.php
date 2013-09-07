@@ -20,7 +20,7 @@
 function handle_input_data ()
 {
   $special = http_getparm ('special_owner');
-  if ((int) $special <= 0)
+  if ((int) $special == -1 || (int) $special == 0)
     $owner = $special;
   else
     $owner = http_getparm ('owner');
@@ -73,6 +73,7 @@ function domains_addform ($d = null)
     }
     else {
       $action = 'add';
+      $id = 0;
 
       $d = array (
         'owner' => 0,

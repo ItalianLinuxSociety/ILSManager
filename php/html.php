@@ -28,14 +28,14 @@ function html_pagehead($titolo, $links = array ()) {
 <head>
 	<title><?php echo $PROGRAMMA["nome"] ?></title>
 
-	<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
 
 	<?php foreach ($PROGRAMMA["css"] as $css): ?>
 	<link rel="stylesheet" type="text/css" href="<?php echo $css ?>">
 	<?php endforeach; ?>
 
-  <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
-  <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-1.9.1.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 
 	<?php foreach ($PROGRAMMA["js"] as $js): ?>
 	<script type="text/javascript" src="<?php echo $js ?>"></script>
