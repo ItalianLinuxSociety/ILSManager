@@ -133,12 +133,18 @@ function socifile_format_rows ($r)
     if (strtolower ($d ["nome"]) . '.' . strtolower ($d ["cognome"]) == strtolower ($d ["nickname"]))
       $d ["nome"] = 'XXX' . $d ["nome"];
 
-    $n = ereg_replace ("'","\\'",$d ["nome"]." ".$d ["cognome"]);
+    $surname = $d ["cognome"];
+    $name = ereg_replace ("'","\\'",$d ["nome"]);
+    $n = "$name $surname";
+
+    $pass = $d ["pw_picard"];
+    if ($pass == '')
+      $pass = '.';
 
     if ($d ["fw_email"]=="")
-      echo $n . " " . $d ["nickname"] . " " . $d ["pw_picard"] . "\n";
+      echo $n . " " . $d ["nickname"] . " " . $pass . "\n";
     else
-      echo $n . " " . $d ["nickname"] . " " . $d ["pw_picard"] . " " . $d ["fw_email"] . "\n";
+      echo $n . " " . $d ["nickname"] . " " . $pass . " " . $d ["fw_email"] . "\n";
   }
 }
 
