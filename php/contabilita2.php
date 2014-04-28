@@ -146,8 +146,10 @@ function contabilita2_ricevute_check()
   $f["indirizzo"]=http_getparm("indirizzo");
   $f["causale"]=http_getparm("causale");
   $f["note"]=http_getparm("note");
+  /*
   if ($f["importo"]>$f["maximp"])
     $f["importo"]=$f["maximp"];
+  */
   unset($_SESSION["ricevuta"]);
   $_SESSION["ricevuta"]=$f;
   html_openform(".",array("function"=>"contabilita","action"=>"ricevute","step"=>"ok"));

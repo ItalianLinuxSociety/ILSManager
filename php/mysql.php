@@ -194,7 +194,7 @@ function sendsocifeeds($trust = false)
 
 function is_email($email)
 {
-  return eregi("^([a-z0-9_\.-\+])+@(([a-z0-9_-])+\\.)+[a-z]{2,6}$",$email);
+  return eregi("^([-a-z0-9_\.\+])+@(([a-z0-9_-])+\\.)+[a-z]{2,6}$",$email);
 }
 
 ?>

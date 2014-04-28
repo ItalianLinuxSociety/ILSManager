@@ -83,7 +83,7 @@ function sociils_sociogetform()
     $s["data_ammissione"]=http_getparm("data_espulsione");
 
   if (isset($_REQUEST["anno_iscrizione"]))
-    $s["anno_iscrizione"]==http_getparm("anno_iscrizione");
+    $s["anno_iscrizione"]=http_getparm("anno_iscrizione");
 
   return $s;
 }
