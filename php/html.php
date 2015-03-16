@@ -227,7 +227,7 @@ function html_openform($action, $hidden = array (), $inline = false)
     <input type="hidden" name="<?php echo $n ?>" value="<?php echo $v ?>">
     <?php endforeach; ?>
 
-  <?
+  <?php
 }
 
 function html_openformfile($action,$hidden)
