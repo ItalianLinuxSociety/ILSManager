@@ -112,15 +112,32 @@ function assemblee_voto($a,$s)
   header("Location: ?function=assemblee&id=$a");
 }
 
-function assemblee_confermaconvoca($id)
+function assemblee_changestatus($old, $new, $id)
 {
   $d=mysql_fetch_assoc(mysql_query("select * from assemblee_elenco where id=$id"));
-  if ($d["stato"]=="preparazione")
+  if ($d["stato"]==$old)
   {
-    $d["stato"]="convocata";
-    my_update("assemblee_elenco",array("stato"=>"convocata"),"id",$id);
+    $d["stato"]=$new;
+    my_update("assemblee_elenco",array("stato"=>$new),"id",$id);
   }
   header("Location: ?function=assemblee");
+}
+
+function assemblee_test_availability()
+{
+  $d = mysql_query("select * from assemblee_elenco where stato='convocata' or stato='aperta'");
+  if (mysql_num_rows($d) > 0)
+    echo " &lt; accedi qui per registrarti e partecipare all'assemblea";
+}
+
+function assemblee_confermaconvoca($id)
+{
+  assemblee_changestatus('preparazione', 'convocata', $id);
+}
+
+function assemblee_apri($id)
+{
+  assemblee_changestatus('convocata', 'aperta', $id);
 }
 
 function assemblee_askconvoca($id)
@@ -135,7 +152,7 @@ function assemblee_askconvoca($id)
     html_tableformstatic("Data",$d["data"]);
     html_tableformstatic("Tipo",$d["tipo"]);
     html_tableformstatic("Convocazione",nl2br($d["convocazione"]));
-    html_tableformsubmit("Invia comunicazione");
+    html_tableformsubmit("Conferma");
     html_closeform();
   }
   else
@@ -236,13 +253,20 @@ function assemblee_mostra($id)
 
       <?php
 
-      if (userperm("admin") && $d["stato"]=="preparazione")
-        echo "<A HREF=\"?function=assemblee&edit=".$d["id"]."\">[modifica]</A>\n".
-          "<A HREF=\"?function=assemblee&convoca=".$d["id"]."\">[invia convocazione]</A>\n";
-      if (userperm("admin") && $d["stato"]=="convocata")
-        echo "<A HREF=\"?function=assemblee&apri=".$d["id"]."\">[apri assemblea]</A>\n";
-      if (userperm("admin") && $d["stato"]=="aperta")
-        echo "<A HREF=\"?function=assemblee&chiudi=".$d["id"]."\">[chiudi assemblea]</A>\n";
+      if (userperm("admin")) {
+        switch($d["stato"]) {
+          case 'preparazione':
+            echo "<A HREF=\"?function=assemblee&edit=".$d["id"]."\">[modifica]</A>\n";
+            echo "<A HREF=\"?function=assemblee&convoca=".$d["id"]."\">[invia convocazione]</A>\n";
+            break;
+          case 'convocata':
+            echo "<A HREF=\"?function=assemblee&apri=".$d["id"]."\">[apri assemblea]</A>\n";
+            break;
+          case 'aperta':
+            echo "<A HREF=\"?function=assemblee&chiudi=".$d["id"]."\">[chiudi assemblea]</A>\n";
+            break;
+        }
+      }
 
       $n = mysql_fetch_array(mysql_query("select count(*) as prenotati, sum(if(presenza=\"si\",1,0)) as presenti, sum(if(voto=\"si\",1,0)) as votanti from assemblee_soci where id_assemblea=$id"));
 
@@ -744,16 +768,14 @@ function assemblee_lista()
 
 function assemblee()
 {
-#  if (!userperm("admin"))
-#  {
-#    header("Location: .");
-#    exit(0);
-#  }
   if (userperm("admin") && http_getparm("conferma")=="ok" && is_numeric($i=http_getparm("convoca")))
     assemblee_confermaconvoca($i);
   else
   if (userperm("admin") && is_numeric($i=http_getparm("convoca")))
     assemblee_askconvoca($i);
+  else
+  if (userperm("admin") && is_numeric($i=http_getparm("apri")))
+    assemblee_apri($i);
   else
   if (userperm("admin") && http_getparm("action")=="new" && http_getparm("conferma")=="ok")
     assemblee_confermanew();

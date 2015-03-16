@@ -76,7 +76,7 @@ function menuilsmanager()
           <li><a href="?function=sociils&action=iscritti&myedit=<?php echo $_SESSION["user"]["login"] ?>">Dati Personali</a></li>
           <li><a href="?function=sociils">Soci ILS</a></li>
           <li><a href="?function=domini">Anagrafe Domini</a></li>
-          <li><a href="?function=assemblee">Assemblee Soci</a></li>
+          <li><a href="?function=assemblee">Assemblee Soci<?php assemblee_test_availability() ?></a></li>
         <?php endif; ?>
         <?php if (userperm("banche")): ?>
           <li><a href="?function=banche">Banche</a></li>
@@ -108,7 +108,6 @@ function menuilsmanager()
   <?php
   html_pagetail();
 }
-
 
 function ilsmanager()
 {

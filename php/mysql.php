@@ -58,7 +58,7 @@ function my_update($table,$record,$key,$keyval)
 
 function my_checklogintable($login,$password,$table,$loginfield,$passwordfield,$where)
 {
-  $q="select * from $table where $loginfield=\"$login\"";
+  $q="select * from $table where $loginfield='$login'";
   if ($where!="") $q.=" and $where";
   if (mysql_num_rows($r=mysql_query($q))==1)
   {
@@ -162,7 +162,7 @@ function sendsocifile($trust = false)
 
     echo "# Nome Cognome nick password\n".
          "# Nome Cognome nick . indirizzo@di.destinazione\n".
-         "# la password può essere sostituita da un . punto\n".
+         "# la password puo' essere sostituita da un . punto\n".
          "\n";
 
     if ($r=mysql_query("select * from users_picard where attivo=\"S\" order by nickname"))
