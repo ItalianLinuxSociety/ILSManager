@@ -1152,8 +1152,10 @@ function sociils_picardcheckform($s,$n)
 {
   if (picard_aliasexist($s["nickname"],$n))
     return "Nickname \"".$s["nickname"]."\" esistente";
+/*
   if ($s["cognome"]!="XXX" && picard_aliasexist($s["cognome"],$n))
     return "Conflitto tra cognome e altri alias di posta";
+*/
   if ($s["nome"]!="XXX" && picard_aliasexist($s["nome"].".".$s["cognome"],$n))
     return "Conflitto tra nome.cognome e altri alias di posta";
   if ($s["fw_email"]!="" && !is_email($s["fw_email"]))
