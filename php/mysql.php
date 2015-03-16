@@ -120,6 +120,10 @@ function userperm($p)
     return FALSE;
 }
 
+function slug($string) {
+  return strtolower(trim(preg_replace('~[^0-9a-z\.\-]+~i', '-', preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($string, ENT_QUOTES, 'UTF-8'))), ' '));
+}
+
 function socifile_format_rows ($r)
 {
   while ($d=mysql_fetch_assoc($r))
@@ -133,8 +137,9 @@ function socifile_format_rows ($r)
     if (strtolower ($d ["nome"]) . '.' . strtolower ($d ["cognome"]) == strtolower ($d ["nickname"]))
       $d ["nome"] = 'XXX' . $d ["nome"];
 
-    $surname = $d ["cognome"];
-    $name = ereg_replace ("'","\\'",$d ["nome"]);
+    $surname = slug (ereg_replace ("'", "", $d ["cognome"]));
+    $name = slug (ereg_replace ("'", "", $d ["nome"]));
+
     $n = "$name $surname";
 
     $pass = $d ["pw_picard"];
