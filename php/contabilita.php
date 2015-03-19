@@ -484,26 +484,31 @@ function contabilita_incompleta()
 {
   html_pagehead("Contabilità", array ('Contabilità' => 'contabilita'));
 
-  mysql_query("create temporary table tmp_checkq select \"banca\" as tipo,id,contabile as data,0 as anno,importo,\"\" as socio,descrizione ".
-    "from banche_righe where isnull(id_riga)");
+  mysql_query("create temporary table tmp_checkq select \"banca\" as tipo,id,contabile as data,0 as anno,importo,\"\" as socio,descrizione from banche_righe where isnull(id_riga)");
   mysql_query("alter table tmp_checkq change socio socio varchar(100)");
   mysql_query("insert into tmp_checkq select \"quota\",data_versamento,anno,0,concat(cognome,\" \",nome),q.note ".
     "from soci_quote as q left join soci_iscritti as i on i.id=q.id_socio where isnull(id_riga)");
   if ($r=mysql_query("select * from tmp_checkq order by data,tipo"))
   {
     html_opentable();
-    html_tableintest(array("data","a/imp","note"));
+    html_tableintest(array("data","a/imp","note", 'rimuovi'));
     while ($d=mysql_fetch_assoc($r))
     {
       if ($d["anno"]>0)
         $e=$d["anno"];
       else
         $e=$d["importo"];
-      if (userperm("admin"))
-        $l="<a href=\"?function=contabilita&action=contabilita1&rigabanca=".$d["id"]."\">".$d["data"]."</a>";
-      else
-        $l=$d["data"];
-      html_tabledata(array($l,$e,strtolower($d["descrizione"])));
+
+      if (userperm("admin")) {
+        $l = '<a href="?function=contabilita&action=contabilita1&rigabanca=' . $d["id"] . '">' . $d["data"] . '</a>';
+        $del = '<a href="?function=contabilita&action=contabilita1&remove=' . $d["id"] . '">Rimuovi</a>';
+      }
+      else {
+        $l = $d["data"];
+        $del = null;
+      }
+
+      html_tabledata(array($l, $e, strtolower($d["descrizione"]), $del));
     }
     html_closetable();
   }
@@ -632,7 +637,7 @@ function contabilita_chiudibilancio2()
     }
   $m["descrizione"]="Generazione ricavi quote soci anno ".date("Y");
   $m["data"]=date("Y")."0101";
-  $idm=my_insert("conti_movimenti",$m);  
+  $idm=my_insert("conti_movimenti",$m);
   unset($r);
   $r["id_movimento"]=$idm;
   $r["valuta"]=$m["data"];

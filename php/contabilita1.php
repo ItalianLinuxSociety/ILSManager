@@ -54,6 +54,11 @@ function contabilita1_handleparam()
     $_SESSION["contab1"]["data"]=$data;
     return "ok";
   }
+  else if (is_numeric($rb=http_getparm("remove")))
+  {
+    mysql_query('delete from banche_righe where id = ' . $rb);
+    return "?function=contabilita&action=incomplete";
+  }
   else if (is_numeric($rb=http_getparm("rigabanca")))
   {
     $d=mysql_fetch_assoc(mysql_query("select * from banche_righe as r left join banche as b on b.id=r.id_banca ".

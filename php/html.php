@@ -155,6 +155,8 @@ function html_tablerow($celle, $class = '')
 
     for ($i=0; $i<count($celle); $i++)
     {
+      if ($celle[$i]==null)
+        continue;
       if ($celle[$i]=="")
         $celle[$i]="&nbsp;";
 
