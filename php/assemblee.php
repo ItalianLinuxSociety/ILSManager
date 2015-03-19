@@ -660,7 +660,7 @@ function assemblee_votazione($id)
 
         <?php
 
-        html_opentable();
+        html_opentable(true);
         html_tableintest(array("#","Voce","Voti"));
 
         while ($d=mysql_fetch_assoc($r))
@@ -712,8 +712,7 @@ function assemblee_votazione($id)
         "select * from votazioni_soci where id_votazione=$id and votato=\"N\" and id_socio=".$_SESSION["user"]["idsocio"])))>0)
       {
         html_openform("",array("function"=>"assemblee","votazionesocio"=>$id));
-        html_tableforminfomsg((($n==1)?("Devi votare 1 volta. "):("Devi votare $n volte. ")).
-          "Puoi scegliere al massimo ".(($v["maxitem"]==1)?("1 opzione."):($v["maxitem"]." opzioni.")));
+        html_tableforminfomsg((($n==1)?("Devi votare 1 volta. "):("Devi votare $n volte. ")). "Puoi scegliere al massimo ".(($v["maxitem"]==1)?("1 opzione."):($v["maxitem"]." opzioni.")));
         if ($r=mysql_query("select * from votazioni_voci where id_votazione=$id"))
           while ($d=mysql_fetch_assoc($r))
             html_tableformcheck(array(),$d["label"],"item".$d["id"]);
