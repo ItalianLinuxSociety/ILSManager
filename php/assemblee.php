@@ -30,7 +30,7 @@ function assemblee_askactionsocio($id)
     return "<a href=\"?function=assemblee&assente=$id\" class=\"btn btn-large\">Ritira Partecipazione</a>\n";
   if (is_numeric($d["id_socio"]))
     return "<a href=\"?function=assemblee&assente=$id\" class=\"btn btn-large\">Ritira Delega</a>\n";
-  return "<a href=\"?function=assemblee&partecipa=$id\" class=\"btn btn-large\">Segnala Partecipazione</a>\n";
+  return "<a href=\"?function=assemblee&partecipa=$id\" class=\"btn btn-primary btn-large\">Segnala Partecipazione</a>\n";
 }
 
 
