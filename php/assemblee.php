@@ -260,6 +260,7 @@ function assemblee_mostra($id)
             echo "<A HREF=\"?function=assemblee&convoca=".$d["id"]."\">[invia convocazione]</A>\n";
             break;
           case 'convocata':
+            echo "<A HREF=\"?function=assemblee&edit=".$d["id"]."\">[modifica]</A>\n";
             echo "<A HREF=\"?function=assemblee&apri=".$d["id"]."\">[apri assemblea]</A>\n";
             break;
           case 'aperta':
