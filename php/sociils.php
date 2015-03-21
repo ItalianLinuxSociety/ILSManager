@@ -261,7 +261,7 @@ function sociils_sociodrawtable_editable($e = '')
         <p>
           Bonifico bancario:
           <pre>Banca: Unicredit Banca
-IT 74 G 02008 12609 000100129899 
+IT 74 G 02008 12609 000100129899
 ILS ITALIAN LINUX SOCIETY</pre>
         </p>
 
@@ -955,7 +955,7 @@ function sociils_iscritto($id)
 
           ?>
 
-          <?php if (userperm("anagrafica") && ($d["data_espulsione"]=="0000-00-00") && ($d2=mysql_fetch_assoc(mysql_query("select max(anno) as ultimo from soci_quote where id_socio=".$d["id"]))) && ($d2["ultimo"]<(date("Y")-2))): ?>
+          <?php if (userperm("anagrafica") && ($d["data_espulsione"]=="0000-00-00")): ?>
           <a href="?function=sociils&action=espulsione&id=<?php echo $d['id'] ?>">Espulsione</a>
           <?php endif; ?>
         <?php endif; ?>
@@ -1120,12 +1120,12 @@ function sociils_picardgetform()
   $s["nickname"]=http_getparm("nickname");
   $s["nome"]=http_getparm("nome");
   $s["cognome"]=http_getparm("cognome");
-  $s["attivo"]=http_getparm("attivo");  
-  $s["sospeso"]=http_getparm("sospeso");  
-  $s["fw_email"]=http_getparm("fw_email");  
-  $s["homepage"]=http_getparm("homepage");  
-  $s["blog_feed"]=http_getparm("blog_feed");  
-  $s["note"]=http_getparm("note");  
+  $s["attivo"]=http_getparm("attivo");
+  $s["sospeso"]=http_getparm("sospeso");
+  $s["fw_email"]=http_getparm("fw_email");
+  $s["homepage"]=http_getparm("homepage");
+  $s["blog_feed"]=http_getparm("blog_feed");
+  $s["note"]=http_getparm("note");
   return $s;
 }
 
