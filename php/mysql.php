@@ -114,6 +114,9 @@ function my_checklogin($login,$password)
 
 function userperm($p)
 {
+  if (isset($_SESSION) == FALSE)
+    return FALSE;
+
   if (array_key_exists ('rules', $_SESSION["user"]) && ($_SESSION["user"]["rules"]["admin"]=="S" || $_SESSION["user"]["rules"][$p]=="S"))
     return TRUE;
   else

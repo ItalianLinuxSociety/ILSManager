@@ -350,7 +350,6 @@ function sociils_nuovadomanda2()
 
     switch ($index) {
       case 'email':
-      case 'data_nasc':
       case 'indirizzo_resid':
       case 'cap_resid':
       case 'nickname':
@@ -371,6 +370,11 @@ function sociils_nuovadomanda2()
         $value = mb_convert_case ($value, MB_CASE_UPPER);
         break;
 
+      case 'data_nasc':
+        list($day, $month, $year) = explode('/', $value);
+        $value = sprintf('%04d-%02d-%02d', $year, $day, $month);
+        break;
+
       default:
         $value = mb_convert_case ($value, MB_CASE_TITLE);
         break;
@@ -379,9 +383,9 @@ function sociils_nuovadomanda2()
     $d[$index] = $value;
   }
 
-  if (preg_match ('/\d{2}\/\d{2}\/\d{4}/', $_REQUEST["domanda"], $matches) == 1) {
-    list ($m, $da, $y) = explode ('/', $matches [0]);
-    $d["data_domanda"] = "$y-$m-$da";
+  $months = array('Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre');
+  if (preg_match ('/(?P<month>(' . join('|', $months) . ')) (?P<day>\d{2}), (?P<year>\d{4})/', $_REQUEST["domanda"], $matches) == 1) {
+    $d["data_domanda"] = sprintf('%04d-%02d-%02d', $matches['year'], array_search($matches['month'], $months) + 1, $matches['day']);
   }
 
   $d['data_approvazione'] = "0000-00-00";

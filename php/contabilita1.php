@@ -169,7 +169,7 @@ function contabilita1_handleparam()
     $b["quota_socio"]=$s;
     $b["quota_anno"]=$a;
     $_SESSION["contab1"]["righe"][]=$b;
-    if ($_SESSION["contab1"]["descrizione"]=="")
+    if (isset($_SESSION["contab1"]["descrizione"]) == false || $_SESSION["contab1"]["descrizione"]=="")
       $_SESSION["contab1"]["descrizione"]="Saldo quota ".$d["cognome"]." ".$d["nome"]." ".$a;
     else
       $_SESSION["contab1"]["descrizione"].=", ".$i["cognome"]." ".$a;
