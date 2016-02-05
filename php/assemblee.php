@@ -123,6 +123,12 @@ function assemblee_changestatus($old, $new, $id)
   header("Location: ?function=assemblee");
 }
 
+function assemblee_chiudi($id)
+{
+  $d=mysql_fetch_assoc(mysql_query("select * from assemblee_elenco where id=$id"));
+  assemblee_changestatus($d['stato'], 'conclusa', $id);
+}
+
 function assemblee_test_availability()
 {
   $d = mysql_query("select * from assemblee_elenco where stato='convocata' or stato='aperta'");
@@ -815,6 +821,9 @@ function assemblee()
   else
   if (userperm("admin") && is_numeric($i=http_getparm("delvotoitem")))
     assemblee_delvotoitem($i,$l);
+  else
+  if (userperm("admin") && is_numeric($i=http_getparm("chiudi")))
+      assemblee_chiudi($i);
   else
   if (is_numeric($i=http_getparm("votazionesocio")) && http_getparm("conferma")=="SI")
     assemblee_votazionesociook($i);
