@@ -155,9 +155,7 @@ function html_tablerow($celle, $class = '')
 
     for ($i=0; $i<count($celle); $i++)
     {
-      if ($celle[$i]==null)
-        continue;
-      if ($celle[$i]=="")
+      if ($celle[$i]==null || $celle[$i]=="")
         $celle[$i]="&nbsp;";
 
       if (is_numeric(strip_tags($celle[$i]))) {
