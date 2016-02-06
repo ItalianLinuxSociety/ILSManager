@@ -566,7 +566,7 @@ function sociils_candidatosocioapprovasql($id,$dataappr,$anno,$quota)
 
   $user_name = $d["nome"];
   $user_surname = $d["cognome"];
-  $nickname = $d["nickname"];
+  $nickname = strtolower($d["nickname"]);
   $email = $d["email"];
 
   $nc["nickname"] = $nickname;
@@ -582,6 +582,7 @@ function sociils_candidatosocioapprovasql($id,$dataappr,$anno,$quota)
 
   $final_name = $nc ['nome'];
   $final_surname = $nc ['cognome'];
+  $fullname_mail = strtolower(sprintf('%s.%s@linux.it', $final_name, $final_surname));
 
   $text =<<<TEXT
 Gentile $user_surname $user_name,
@@ -590,14 +591,19 @@ Society e quindi adesso sei un candidato socio a tutti gli effetti.
 
 L'ammissione definitiva avverra' nel corso della prossima assemblea dei soci,
 presso cui sarai invitato a partecipare, ma nel frattempo nelle prossime ore
-saranno abilitati i tuoi indirizzi mail @linux.it e sei stato iscritto alla
+saranno abilitati i tuoi indirizzi mail @linux.it e sarai iscritto alla
 nostra mailing list privata.
 
 Entrambi gli indirizzi
-${final_name}.${final_surname}@linux.it e
+${fullname_mail}
 ${nickname}@linux.it
 verranno settati entro poche ore come alias all'indirizzo
 ${email}
+
+(Nota bene: presso alcuni fornitori di mail, tra cui GMail, non funziona
+inviarsi una mail ad un proprio alias. Per verificare il funzionamento
+dell'alias, inviati / fatti inviare un messaggio da un indirizzo diverso)
+
 E' possibile modificare tale impostazione per mezzo di ILSManager, il nostro
 gestionale interno, raggiungibile all'indirizzo https://ilsmanager.linux.it/
 (cui si accede sempre con lo username "${nickname}", effettua il
