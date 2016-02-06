@@ -384,9 +384,10 @@ function sociils_nuovadomanda2()
   }
 
   $months = array('Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre');
-  if (preg_match ('/(?P<month>(' . join('|', $months) . ')) (?P<day>\d{2}), (?P<year>\d{4})/', $_REQUEST["domanda"], $matches) == 1) {
+  if (preg_match ('/(?P<month>(' . join('|', $months) . ')) (?P<day>\d{1,2}), (?P<year>\d{4})/', $_REQUEST["domanda"], $matches) == 1)
     $d["data_domanda"] = sprintf('%04d-%02d-%02d', $matches['year'], array_search($matches['month'], $months) + 1, $matches['day']);
-  }
+  else
+    $d["data_domanda"] = date('Y-m-d');
 
   $d['data_approvazione'] = "0000-00-00";
   $d['data_ammissione'] = "0000-00-00";
