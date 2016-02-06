@@ -1,7 +1,7 @@
 <?php
 
 /*  Copyright (C) Michele Dalla Silvestra
- *  Copyright (C) 2012 - 2013 Roberto Guido <bob@linux.it>
+ *  Copyright (C) 2012 - 2016 Roberto Guido <bob@linux.it>
  *
  *  This is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,55 +19,57 @@
 
 function test_value_array ($array, $name, $value = null, $type = '')
 {
-  if (array_key_exists ($name, $array) == false)
-    return false;
+        if (array_key_exists ($name, $array) == false)
+                return false;
 
-  if ($value == null) {
-    switch ($type) {
-      case 'str':
-        return is_string ($array [$name]);
-      case 'array':
-        return is_array ($array [$name]);
-      case 'num':
-        return $array [$name] != '' && is_numeric ($array [$name]);
-    }
-  }
-  else {
-    return ($array [$name] == $value);
-  }
+        if ($value == null) {
+                switch ($type) {
+                        case 'str':
+                                return is_string ($array [$name]);
+                        case 'array':
+                                return is_array ($array [$name]);
+                        case 'num':
+                                return $array [$name] != '' && is_numeric ($array [$name]);
+                }
+        }
+        else {
+                return ($array [$name] == $value);
+        }
 }
 
 function printable_date ($date)
 {
-  $months = array ('gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno',
-                   'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre');
-
-  list ($y, $m, $d) = explode ('-', $date);
-  $m = $months [$m - 1];
-  return "$d $m $y";
+        $months = array ('gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre');
+        list ($y, $m, $d) = explode ('-', $date);
+        $m = $months [$m - 1];
+        return "$d $m $y";
 }
 
 /*
-  Copiato da
-  http://stackoverflow.com/questions/4356289/php-random-string-generator
+        Copiato da
+        http://stackoverflow.com/questions/4356289/php-random-string-generator
 */
 function random_string ($length = 10)
 {
-  $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  $randomString = '';
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $randomString = '';
 
-  for ($i = 0; $i < $length; $i++)
-      $randomString .= $characters [rand (0, strlen ($characters) - 1)];
+        for ($i = 0; $i < $length; $i++)
+                $randomString .= $characters [rand (0, strlen ($characters) - 1)];
 
-  return $randomString;
+        return $randomString;
 }
 
 function current_social_year () {
-  return date ('Y', strtotime ("+2 months"));
+        return date ('Y', strtotime ("+2 months"));
 }
 
 function annual_fee_amount () {
-  return 25;
+        return 25;
 }
 
-?>
+function socio_mail($id) {
+        $query = sprintf('SELECT email FROM soci_iscritti WHERE id = %d', $id);
+        $u = mysql_fetch_array(mysql_query($query));
+        return $u['email'];
+}
