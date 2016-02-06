@@ -62,7 +62,6 @@ function contabilita2_ricevute_crea($data)
   html_pagetail();
 }
 
-
 function contabilita2_ricevute_creamov($id)
 {
   html_pagehead("Ricevute incassi", array ('Contabilità' => 'contabilita', 'Ricevute' => 'contabilita&action=ricevute'));
@@ -146,10 +145,6 @@ function contabilita2_ricevute_check()
   $f["indirizzo"]=http_getparm("indirizzo");
   $f["causale"]=http_getparm("causale");
   $f["note"]=http_getparm("note");
-  /*
-  if ($f["importo"]>$f["maximp"])
-    $f["importo"]=$f["maximp"];
-  */
   unset($_SESSION["ricevuta"]);
   $_SESSION["ricevuta"]=$f;
   html_openform(".",array("function"=>"contabilita","action"=>"ricevute","step"=>"ok"));
@@ -164,14 +159,8 @@ function contabilita2_ricevute_check()
   html_pagetail();
 }
 
-
-function contabilita2_ricevute_make()
+function contabilita2_ricevute_make_internal($f)
 {
-  if (!is_array($f=$_SESSION["ricevuta"]))
-  {
-    header("Location: ?function=contabilita&action=ricevute");
-    exit(0);
-  }
   $d["id_socio"]=$f["id_socio"];
   $d["id_movimento"]=$f["id_movimento"];
   $d["importo"]=$f["importo"];
@@ -185,7 +174,18 @@ function contabilita2_ricevute_make()
   $d["numero"]=$n["ultima"]+1;
   $id=my_insert("ricevute",$d);
   $d["data"]=$g["data"];
-  contabilita2_ricevute_pdf($d);
+  return contabilita2_ricevute_pdf($d);
+}
+
+function contabilita2_ricevute_make()
+{
+  $f=$_SESSION["ricevuta"];
+  if (!is_array($f)) {
+    header("Location: ?function=contabilita&action=ricevute");
+    exit(0);
+  }
+
+  contabilita2_ricevute_make_internal($f);
   header("Location: ?function=contabilita&action=ricevute");
 }
 
@@ -198,7 +198,7 @@ function ricevuta($data,$num,$importo,$intestazione,$indirizzo,$causale)
   $this->Cell(80,9,"ILS - Italian Linux Society",0,1,"",0);
   $this->SetFont("Arial","B",15);
   $this->SetXY(45,17);
-  $this->Cell(80,8,"http://www.linux.it",0,1,"",0);
+  $this->Cell(80,8,"http://www.ils.org/",0,1,"",0);
   $this->SetFont("Arial","",10);
   $this->SetXY(45,25);
   $this->MultiCell(80,4,"via Aldo Moro, 223\n92026 Favara AG\ncod. fiscale 92043980090\np. iva 02438840841",0,1,"",0);
@@ -223,12 +223,6 @@ function ricevuta($data,$num,$importo,$intestazione,$indirizzo,$causale)
   $this->SetFont("Arial","B",16);
   $this->SetXY(75,55);
   $this->Cell(25,10,$importo,0,1,"R",0);
-  $this->SetFont("Arial","",12);
-  $this->SetXY(100,55);
-  $this->Cell(0,10,"da",0,1,"",0);
-  $this->SetFont("Arial","B",16);
-  $this->SetXY(106,55);
-  $this->Cell(0,10,$intestazione,0,1,"",0);
   $this->SetFont("Arial","",13);
   $this->SetXY(106,63);
   $this->MultiCell(0,5,"$indirizzo",0,"",0);
@@ -239,27 +233,26 @@ function ricevuta($data,$num,$importo,$intestazione,$indirizzo,$causale)
   $this->SetXY(35,96);
   $this->MultiCell(0,7,"$causale",0,"",0);
   $this->SetFont("Arial","BI",11);
-#  $this->SetXY(130,105);
-#  $this->Cell(40,10,"Dalla Silvestra Michele",0,1,"C",0);
   $this->SetXY(130,120);
   $this->Cell(40,10,"Direzione ILS",0,1,"C",0);
   $this->SetFont("Arial","B",11);
   $this->SetXY(10,130);
   $this->Cell(0,10,"Documento non fiscale, a quietanza del pagamento.",0,1,"",0);
-#  $this->Line(10,137,200,137);
 }}
+
 function contabilita2_ricevute_pdf($d)
 {
   global $UNIXDIR;
   $pdf=new ricevutaPDF();
   $pdf->AliasNbPages();
   $pdf->AddPage();
-  $pdf->ricevuta(date("d/m/Y",strtotime($d["data"])),$d["numero"],
-    $d["importo"],$d["intestazione"],$d["indirizzo"],$d["causale"]);
+  $pdf->ricevuta(date("d/m/Y",strtotime($d["data"])),$d["numero"], $d["importo"],$d["intestazione"],$d["indirizzo"],$d["causale"]);
   $DIR=$UNIXDIR["archivio"]."ricevute/".substr($d["data"],0,4);
   $FILE=sprintf("ricevuta-%s-%05d.pdf",str_replace("-","",$d["data"]),$d["numero"]);
-  system("mkdir ".$DIR);
-  $pdf->Output($DIR."/".$FILE,"F");
+  mkdir($DIR, 0766, true);
+  $path = $DIR."/".$FILE;
+  $pdf->Output($path,"F");
+  return $path;
 }
 
 function contabilita2_ricevutepdf($id)
@@ -308,6 +301,7 @@ function contabilita2_ricevute_anno($a)
 
   $q="select *,r.id as idr from ricevute as r left join soci_iscritti as s on s.id=r.id_socio ".
     "left join conti_movimenti as m on m.id=r.id_movimento where year(data)=$a order by data";
+
   if ($r=mysql_query($q))
   {
     echo "<H2>Ricevute anno $a</H2>\n";
@@ -320,8 +314,8 @@ function contabilita2_ricevute_anno($a)
         $int=$d["intestazione"];
       else
         $int="<A HREF=\"?function=sociils&action=iscritti&show=".$d["id_socio"]."\">".$d["intestazione"]."</A>";
-      html_tabledata(array($d["data"],"<A HREF=\"?function=contabilita&action=ricevute&show=".$d["idr"]."\">".$d["numero"]."</A>",
-        $int,$d["importo"]));
+
+      html_tabledata(array($d["data"],"<A HREF=\"?function=contabilita&action=ricevute&show=".$d["idr"]."\">".$d["numero"]."</A>", $int,$d["importo"]));
       $t+=$d["importo"];
     }
     html_closetable();
@@ -402,7 +396,5 @@ function contabilita2_ricevute()
   else
     contabilita2_ricevute_menu();
 }
-
-
 
 ?>

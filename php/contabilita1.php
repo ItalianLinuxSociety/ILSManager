@@ -230,6 +230,7 @@ function contabilita1_handleparam()
         mysql_query("update banche_righe set id_riga=$id where id=".$r["id_rigabanca"]);
       if (is_numeric($r["id_rigaquota"]))
         mysql_query("update soci_quote set id_riga=$id where id=".$r["id_rigaquota"]);
+
       if (is_numeric($r["quota_anno"]))
       {
         $q["id_socio"]=$r["quota_socio"];
@@ -237,6 +238,34 @@ function contabilita1_handleparam()
         $q["data_versamento"]=$r["valuta"];
         $q["id_riga"]=$id;
         my_insert("soci_quote",$q);
+        $mail = socio_mail($q["id_socio"]);
+
+        $data = array(
+          'id_movimento' => $m["id"],
+          'id_socio' => $q["id_socio"],
+          'importo' => $r["avere"],
+          'email' => $mail,
+          'intestazione' => '',
+          'indirizzo' => '',
+          'causale' => $m["descrizione"],
+          'note' => $m["note"],
+        );
+
+        contabilita2_ricevute_make_internal($data);
+
+        $text =<<<TEXT
+Abbiamo ricevuto e registrato il tuo versamento per la quota di iscrizione ad
+Italian Linux Society. Puoi scaricare la ricevuta dal tuo pannello personale su
+https://ilsmanager.linux.it/
+
+Grazie per aver rinnovato la tua partecipazione!
+
+Cordiali saluti,
+        Il Direttivo ILS
+
+TEXT;
+
+        mail($mail, "Ricevuta Quota ILS", $text, "From: Direttore ILS <direttore@linux.it>");
       }
     }
     unset($_SESSION["contab1"]);
