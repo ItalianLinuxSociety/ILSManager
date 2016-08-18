@@ -210,7 +210,7 @@ function sociils_sociodrawtable_editable($e = '')
 
         array (
           'forward' => '<span class="help-block">Indirizzo Mail di Destinazione: <input type="text" name="fw_email" value="' . $p ['fw_email'] . '" /></span><span class="help-block">L\'indirizzo @linux.it funge da mail alias, e tutte le mail in ingresso vengono spedite a quest\'altro indirizzo.</span>',
-          'inbox' => '<span class="help-block"><a href="?function=users&action=formchangepwpicard">Cambia Password POP3/IMAP</a></span><span class="help-block">Le mail destinate all\'indirizzo @linux.it verranno conservate in una inbox sul server ILS, accessibile via <a href="http://www.linux.it/posta">webmail</a>, o POP3 e IMAP sul server picard.linux.it</span>'
+          'inbox' => '<span class="help-block"><a href="?function=users&action=formchangepwpicard">Cambia Password POP3/IMAP</a></span><span class="help-block">Le mail destinate all\'indirizzo @linux.it verranno conservate in una inbox sul server ILS, accessibile via <a href="http://www.linux.it/posta">webmail</a>, o POP3 e IMAP sul server picard.linux.it.<br/>IMAP: picard.linux.it:143, STARTTLS, Password normale<br/>SMTP: picard.linux.it:587, STARTTLS, Password normale</span>'
         )
       );
 
