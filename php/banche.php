@@ -225,11 +225,11 @@ function banche_bancanuoverighe2($id)
         if ($ok == 1)
         {
           $c = str_getcsv ($r);
-          $nr ["contabile"] = implode ("-", array_reverse (split ("/", trim ($c[0], '"'))));
-          $nr ["valuta"] = implode ("-", array_reverse (split ("/", trim ($c[0], '"'))));
-          $nr ["descrizione"] = trim ($c [3], '"') . ' - ' . trim ($c [12], '"');
-          $nr ["importo"] = ereg_replace (",", ".", trim ($c [7], '"'));
-          $nr ["commissioni"] = (ereg_replace (",", ".", trim ($c [8], '"'))) * -1;
+          $nr['contabile']   = implode( '-', array_reverse( explode( '/', trim( $c[0], '"' ) ) ) );
+          $nr['valuta']      = trim( $c[6], '"' );
+          $nr['descrizione'] = trim( $c[3], '"' ) . ' - ' . trim( $c[12], '"' );
+          $nr['importo']     = str_replace( ',', '.',       trim( $c[7], '"'  ) );
+          $nr['commissioni'] = ( str_replace( ',', '.',     trim( $c[8], '"'  ) ) ) * -1;
 
           switch ($c[4]) {
             case 'Payment Received':
